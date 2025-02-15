@@ -11,3 +11,6 @@ or
 
 check error
 `npx tsc --noEmit`
+
+`npm install prisma`
+`npx prisma init`
