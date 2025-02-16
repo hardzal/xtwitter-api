@@ -9,20 +9,22 @@ class UserController {
   async getUsers(req: Request, res: Response) {
     try {
       const users = await userService.getUsers();
-      return res.json(users);
+      res.json(users);
     } catch (error) {
-      return res.json(error);
+      res.json(error);
     }
+    return;
   }
 
   async getUserById(req: Request, res: Response) {
     try {
       const { id } = req.params;
       const user = await userService.getUserById(id);
-      return res.json(user);
+      res.json(user);
     } catch (error) {
-      return res.json(error);
+      res.json(error);
     }
+    return;
   }
 
   async createUser(req: Request, res: Response) {
@@ -30,10 +32,11 @@ class UserController {
       const body = req.body;
       const validateBody = await createUserSchema.validateAsync(body);
       const user = await userService.createUser(validateBody);
-      return res.json(user);
+      res.json(user);
     } catch (error) {
-      return res.json(error);
+      res.json(error);
     }
+    return;
   }
 
   async updateUserById(req: Request, res: Response) {
@@ -64,6 +67,7 @@ class UserController {
     } catch (error) {
       res.json(error);
     }
+    return;
   }
 
   async deleteUserById(req: Request, res: Response) {
@@ -75,6 +79,7 @@ class UserController {
     } catch (error) {
       res.json(error);
     }
+    return;
   }
 }
 
