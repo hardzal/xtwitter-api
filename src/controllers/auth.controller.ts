@@ -80,10 +80,10 @@ class AuthController {
     return;
   }
 
-  async check(req: UserRequestMiddleware, res: Response) {
+  async check(req: Request, res: Response) {
     try {
       const payload = req.user; // fixed by defined an interface
-      const user = await userService.getUserById(payload.id);
+      const user = await userService.getUserById(payload!.id);
       res.send(user);
     } catch (error) {
       res.json(error);
@@ -173,6 +173,8 @@ class AuthController {
     }
     return;
   }
+
+  async verifyEmail() {}
 }
 
 export default new AuthController();

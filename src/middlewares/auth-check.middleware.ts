@@ -1,12 +1,11 @@
-import { Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { UserRequestMiddleware } from '../interface/user-request-middleware';
 
-export function authCheck(
-  req: UserRequestMiddleware,
+export async function authCheck(
+  req: Request,
   res: Response,
   next: NextFunction
-) {
+): Promise<void> {
   const token = req.headers['authorization'] || '';
   const jwtSecret = process.env.JWT_SECRET || '';
   const user = jwt.verify(token, jwtSecret);
@@ -18,6 +17,6 @@ export function authCheck(
     return;
   }
 
-  req.user.jwt = user;
+  req.user!.jwt = user;
   next();
 }

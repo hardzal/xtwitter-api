@@ -4,7 +4,7 @@ export interface UserRequestMiddleware extends Request {
   user: User;
 }
 
-interface User {
+export interface User {
   id: string;
   email: string;
   jwt: JwtPayload | string;
