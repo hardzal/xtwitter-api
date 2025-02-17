@@ -11,7 +11,6 @@ import jwt from 'jsonwebtoken';
 import { transporter } from '../libs/nodemailer';
 import { RegisterDTO } from '../dtos/auth.dto';
 import authService from '../services/auth.service';
-import { UserRequestMiddleware } from '../interface/user-request-middleware';
 
 class AuthController {
   async login(req: Request, res: Response) {
@@ -125,7 +124,7 @@ class AuthController {
     return;
   }
 
-  async resetPassword(req: UserRequestMiddleware, res: Response) {
+  async resetPassword(req: Request, res: Response) {
     try {
       const payload = req.user;
       const body = req.body;
@@ -140,7 +139,7 @@ class AuthController {
         return;
       }
 
-      const user = await userService.getUserByEmail(payload.email);
+      const user = await userService.getUserByEmail(payload!.email);
 
       if (!user) {
         res.status(404).json({
@@ -167,14 +166,28 @@ class AuthController {
         user.email,
         hashedPassword
       );
-      res.send(updatedUserPassword);
+      res.json(updatedUserPassword);
     } catch (error) {
       res.json(error);
     }
     return;
   }
 
-  async verifyEmail() {}
+  async verifyEmail(req: Request, res: Response) {
+    try {
+      // user mendaftar
+      // sistem mengirim link konfirmasi email
+      // user mengakses link konfirmasi email
+      // user terkonfirmasi emailnya
+
+      res.json();
+    } catch (error) {
+      res.json(error);
+    }
+    return;
+  }
+
+  async confirmEmail() {}
 }
 
 export default new AuthController();
