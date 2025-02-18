@@ -1,16 +1,17 @@
+import { Request, Response } from 'express';
 import userService from '../services/user.service';
+import authService from '../services/auth.service';
+
 import {
   forgotPasswordSchema,
   loginSchema,
   registerSchema,
   ResetPasswordSchema,
 } from '../utils/schemas/auth.schema';
-import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { transporter } from '../libs/nodemailer';
+import { transportNodeMailer } from '../config/nodemailer-transporter';
 import { RegisterDTO } from '../dtos/auth.dto';
-import authService from '../services/auth.service';
 
 class AuthController {
   async login(req: Request, res: Response) {
@@ -81,6 +82,7 @@ class AuthController {
 
   async check(req: Request, res: Response) {
     try {
+      // const payload = (req as any).user; // fixed by defined an interface
       const payload = req.user; // fixed by defined an interface
       const user = await userService.getUserById(payload!.id);
       res.send(user);
@@ -114,7 +116,7 @@ class AuthController {
       `,
       };
 
-      await transporter.sendMail(emailOptions);
+      await transportNodeMailer.sendMail(emailOptions);
       res.json({
         message: 'Forgot password link sent!',
       });
@@ -126,7 +128,9 @@ class AuthController {
 
   async resetPassword(req: Request, res: Response) {
     try {
-      const payload = req.user;
+      // const payload = (req as any).user; // shorterm
+      const payload = req.user; // shorterm
+      const body = req.body;
       const body = req.body;
 
       const { oldPassword, newPassword } =
@@ -186,8 +190,6 @@ class AuthController {
     }
     return;
   }
-
-  async confirmEmail() {}
 }
 
 export default new AuthController();

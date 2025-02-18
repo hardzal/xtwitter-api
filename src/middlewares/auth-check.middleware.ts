@@ -17,6 +17,7 @@ export async function authCheck(
     return;
   }
 
+  // (req as any).user = user;
   req.user!.jwt = user;
   next();
 }

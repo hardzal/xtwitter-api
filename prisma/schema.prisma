@@ -73,10 +73,10 @@ model Follow {
   id String @id @default(uuid())
 
   followed User @relation(name: "followedUser", fields: [followedId], references: [id])
-  followedId String
+  followedId String // yang difollow
 
   following User @relation(name: "followingUser", fields: [followingId], references: [id])
-  followingId String
+  followingId String // yang memfollow
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

@@ -3,7 +3,7 @@ import { prisma } from '../libs/prisma';
 
 class UserService {
   async getUsers() {
-    return await prisma.user.findFirst();
+    return await prisma.user.findMany();
   }
 
   async getUserById(id: string) {

@@ -1,1 +1,40 @@
 # API endpoints
+
+- [x] Authentication
+- [x] User CRUD
+- [ ] Thread CRUD
+  - GET ALL /api/threads
+  - GET one /api/threads/:id
+  - CREATE /api/threads
+  - UPDATE /api/threads/:id
+  - DELETE /api/threads/:id
+- [ ] Profile
+  - GET all /api/profiles
+  - GET one /api/profiles/:id
+  - CREATE /api/profiles
+  - UPDATE /api/profiles/:id
+  - DELETE /api/profiles/:id
+- [ ] Follow
+  - GET ALL followers /api/profile/:username/followed
+  - GET ALL following /api/profile/:username/following
+  - DELETE followers /api/profile/:username/followed/:username
+  - DELETE following /api/profile/:username/following/:username
+- [ ] Like
+  - GET ALL likes /api/profile/:username/likes
+  - GET ALL thread likes /api/threads/:id/likes
+  - GET likes /api/likes/:id
+  - DELETE likes /api/likes/:id
+- [ ] Replies
+  - GET ALL replies
+  - GET replies
+  - UPDATE replies
+  - DELETE replies
+- [ ] Search
+  - Search by username
+  - Search by text
+- [ ] Admin
+  - role
+  - statistik user
+  - statistik threads
+  - statistik likes
+  - stattistik replies

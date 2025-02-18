@@ -10,4 +10,5 @@ router.post('/check', authCheck, authController.check);
 router.post('/forgot-password', authController.forgotPassword);
 router.post('/reset-password', authCheck, authController.resetPassword);
 router.post('/verify-email', authController.verifyEmail);
+
 export default router;
