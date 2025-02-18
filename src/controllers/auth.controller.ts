@@ -131,7 +131,6 @@ class AuthController {
       // const payload = (req as any).user; // shorterm
       const payload = req.user; // shorterm
       const body = req.body;
-      const body = req.body;
 
       const { oldPassword, newPassword } =
         await ResetPasswordSchema.validateAsync(body);
