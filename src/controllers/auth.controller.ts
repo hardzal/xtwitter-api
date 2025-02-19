@@ -15,6 +15,17 @@ import { RegisterDTO } from '../dtos/auth.dto';
 
 class AuthController {
   async login(req: Request, res: Response) {
+    /*  #swagger.requestBody = {
+            required: true,
+            content: {
+                "application/json": {
+                    schema: {
+                        $ref: "#/components/schemas/LoginDTO"
+                    }  
+                }
+            }
+        } 
+    */
     try {
       const body = req.body;
       const { email, password } = await loginSchema.validateAsync(body);
@@ -62,6 +73,17 @@ class AuthController {
   }
 
   async register(req: Request, res: Response) {
+    /*  #swagger.requestBody = {
+            required: true,
+            content: {
+                "application/json": {
+                    schema: {
+                        $ref: "#/components/schemas/RegisterDTO"
+                    }  
+                }
+            }
+        } 
+    */
     try {
       const body = req.body;
       const validatedBody = await registerSchema.validateAsync(body);
@@ -93,6 +115,17 @@ class AuthController {
   }
 
   async forgotPassword(req: Request, res: Response) {
+    /*  #swagger.requestBody = {
+            required: true,
+            content: {
+                "application/json": {
+                    schema: {
+                        $ref: "#/components/schemas/ForgotPasswordDTO"
+                    }  
+                }
+            }
+        } 
+    */
     try {
       const body = req.body;
       const { email } = await forgotPasswordSchema.validateAsync(body);
@@ -127,6 +160,17 @@ class AuthController {
   }
 
   async resetPassword(req: Request, res: Response) {
+    /*  #swagger.requestBody = {
+            required: true,
+            content: {
+                "application/json": {
+                    schema: {
+                        $ref: "#/components/schemas/ResetPasswordDTO"
+                    }  
+                }
+            }
+        } 
+    */
     try {
       // const payload = (req as any).user; // shorterm
       const payload = req.user; // shorterm
@@ -141,7 +185,7 @@ class AuthController {
         });
         return;
       }
-
+      console.log(payload);
       const user = await userService.getUserByEmail(payload!.email);
 
       if (!user) {
