@@ -1,10 +1,20 @@
-import { CreateLikesDTO, DeleteLikesDTO } from '../dtos/likes.dto';
+import { CreateLikesDTO } from '../dtos/likes.dto';
 import { prisma } from '../libs/prisma';
 
 class LikesService {
   // mendapatkan all likes
   async getLikes() {
     return await prisma.like.findMany();
+  }
+
+  async getLikeById(id: string) {
+    return await prisma.like.findFirst({
+      where: { id },
+      include: {
+        user: true,
+        thread: true,
+      },
+    });
   }
 
   // mendapatkan user like by thread
@@ -48,8 +58,7 @@ class LikesService {
   }
 
   // delete likes
-  async deleteLike(data: DeleteLikesDTO) {
-    const { userId, threadId } = data;
+  async deleteLike(userId: string, threadId: string) {
     return await prisma.like.delete({
       where: { userId, threadId },
     });
