@@ -5,7 +5,7 @@ class ProfileController {
 
   async getProfileByUsername() {}
 
-  async CreateProfile() {}
+  async createProfile() {}
 
   async updateProfile() {}
 

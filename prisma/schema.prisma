@@ -104,7 +104,10 @@ model Reply {
   
   thread Thread @relation(fields: [threadId], references: [id])
   threadId String
-
+  
+  content String
+  images String[]
+  
   user User @relation(fields: [userId], references: [id])
   userId String
 

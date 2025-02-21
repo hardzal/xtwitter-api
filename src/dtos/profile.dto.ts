@@ -1,11 +1,16 @@
-import { Profile } from '@prisma/client';
+import { Profile, User } from '@prisma/client';
+
+type ProfileUser = Profile & {
+  username: User['username'];
+  email: User['email'];
+};
 
 export type CreateProfileDTO = Pick<
-  Profile,
+  ProfileUser,
   'userId' | 'fullName' | 'avatar' | 'bannerURL' | 'bio'
 >;
 
 export type UpdateProfileDTO = Pick<
-  Profile,
+  ProfileUser,
   'fullName' | 'avatar' | 'bannerURL' | 'bio'
 >;
