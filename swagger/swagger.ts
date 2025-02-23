@@ -17,7 +17,7 @@ const doc = {
         type: 'object',
         properties: {
           email: {
-            type: 'integer',
+            type: 'string',
           },
           password: {
             type: 'string',
@@ -63,7 +63,7 @@ const doc = {
           content: {
             type: 'string',
           },
-          images: {
+          Images: {
             type: 'file',
           },
         },

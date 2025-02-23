@@ -59,6 +59,17 @@ class ThreadController {
 
   // create thread
   async createThread(req: Request, res: Response, next: NextFunction) {
+    /*  #swagger.requestBody = {
+            required: true,
+            content: {
+              "multipart/form-data": {
+                    schema: {
+                        $ref: "#/components/schemas/CreateThreadDTO"
+                    }  
+                }
+            }
+        } 
+    */
     try {
       let uploadResult: UploadApiResponse = {} as UploadApiResponse;
 
