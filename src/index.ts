@@ -5,6 +5,7 @@ import apiRouter from './routes/api.route';
 import swaggerUI from 'swagger-ui-express';
 import swaggerDoc from '../swagger/swagger-output.json';
 import cors from 'cors';
+import { errorHandler } from './middlewares/error.middleware';
 
 dotenv.config();
 //
@@ -46,7 +47,7 @@ app.use(
 );
 app.use(rootRouter);
 app.use('/api', apiRouter);
-
+app.use(errorHandler);
 app.listen(port, () => {
   console.log(`The server is running at http://localhost:${port}`);
 });

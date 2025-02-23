@@ -1,17 +1,17 @@
 class FollowController {
+  async getFollows() {}
+
   async getFollowersByUserId() {}
 
   async getFollowersByUsername() {}
 
-  async getFollowingByUserId() {}
+  async getFollowingsByUserId() {}
 
-  async getFollowingByUsername() {}
+  async getFollowingsByUsername() {}
 
   async deleteFollowingByUserId() {}
 
   async deleteFollowingByUsername() {}
-
-  async deleteFollowedByUsername() {}
 }
 
 export default new FollowController();

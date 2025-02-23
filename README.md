@@ -14,3 +14,5 @@ check error
 
 `npm install prisma`
 `npx prisma init`
+
+`npm run swagger`

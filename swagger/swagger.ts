@@ -12,23 +12,72 @@ const doc = {
         scheme: 'bearer',
       },
     },
-    schemas: {
+    '@schemas': {
       LoginDTO: {
-        $email: 'alice@prisma.io',
-        $password: 'password',
+        type: 'object',
+        properties: {
+          email: {
+            type: 'integer',
+          },
+          password: {
+            type: 'string',
+          },
+        },
       },
       RegisterDTO: {
-        $fullName: 'Admin First',
-        $username: 'admin_first',
-        $email: 'admin_first@gmail.com',
-        $password: '12345678',
+        type: 'object',
+        properties: {
+          fullName: {
+            type: 'string',
+          },
+          username: {
+            type: 'string',
+          },
+          email: {
+            type: 'string',
+          },
+          password: {
+            type: 'string',
+          },
+        },
       },
       ForgotPasswordDTO: {
-        $email: 'admin_first@gmail.com',
+        type: 'object',
+        properties: {
+          email: {
+            type: 'string',
+          },
+        },
       },
       ResetPasswordDTO: {
-        $oldPassword: '12345678',
-        $newPassword: 'password_new',
+        type: 'object',
+        properties: {
+          email: {
+            type: 'string',
+          },
+        },
+      },
+      CreateThreadDTO: {
+        type: 'object',
+        properties: {
+          content: {
+            type: 'string',
+          },
+          images: {
+            type: 'file',
+          },
+        },
+      },
+      CreateLikeDTO: {
+        type: 'object',
+        properties: {
+          threadId: {
+            type: 'string',
+          },
+          userId: {
+            type: 'string',
+          },
+        },
       },
     },
   },
