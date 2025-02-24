@@ -10,6 +10,8 @@ class UserService {
     return await prisma.user.findFirst({
       where: { id },
       select: {
+        username: true,
+        email: true,
         password: isPassword,
         profile: true,
       },
