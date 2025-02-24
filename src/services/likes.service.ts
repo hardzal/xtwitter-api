@@ -1,4 +1,4 @@
-import { CreateLikesDTO } from '../dtos/likes.dto';
+import { CreateLikeDTO } from '../dtos/likes.dto';
 import { prisma } from '../libs/prisma';
 
 class LikesService {
@@ -51,7 +51,7 @@ class LikesService {
   }
 
   // create likes
-  async createLike(data: CreateLikesDTO) {
+  async createLike(data: CreateLikeDTO) {
     return await prisma.like.create({
       data: data,
     });
