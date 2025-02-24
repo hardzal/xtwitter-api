@@ -95,7 +95,10 @@ class AuthController {
       };
 
       const user = await authService.register(registerBody);
-      res.json(user);
+      res.status(200).json({
+        message: 'Register success!',
+        data: { ...user },
+      });
     } catch (error) {
       res.json(error);
     }
@@ -106,8 +109,19 @@ class AuthController {
     try {
       // const payload = (req as any).user; // fixed by defined an interface
       const payload = req.user; // fixed by defined an interface
-      const user = await userService.getUserById(payload!.id);
-      res.send(user);
+      const user = await userService.getUserById(payload!.id, false);
+
+      if (!user) {
+        res.status(404).json({
+          message: 'User not found!',
+        });
+        return;
+      }
+
+      res.status(200).json({
+        message: 'User check success!',
+        data: user,
+      });
     } catch (error) {
       res.json(error);
     }

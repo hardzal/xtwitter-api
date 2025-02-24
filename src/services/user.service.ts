@@ -6,10 +6,11 @@ class UserService {
     return await prisma.user.findMany();
   }
 
-  async getUserById(id: string) {
+  async getUserById(id: string, isPassword: boolean = true) {
     return await prisma.user.findFirst({
       where: { id },
-      include: {
+      select: {
+        password: isPassword,
         profile: true,
       },
     });
