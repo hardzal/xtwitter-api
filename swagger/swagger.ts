@@ -79,6 +79,14 @@ const doc = {
           },
         },
       },
+      CreateReplyDTO: {
+        type: 'Object',
+        properties: {
+          content: {
+            type: 'string',
+          },
+        },
+      },
     },
   },
   host: 'localhost:3000',

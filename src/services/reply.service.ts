@@ -36,9 +36,14 @@ class ReplyService {
     });
   }
 
-  async createReply(data: CreateReplyDTO) {
+  async createReply(userId: string, threadId: string, data: CreateReplyDTO) {
+    const { content } = data;
     return await prisma.reply.create({
-      data,
+      data: {
+        threadId,
+        userId,
+        content,
+      },
     });
   }
 

@@ -18,9 +18,41 @@ class UserService {
     });
   }
 
-  async getUserByEmail(email: string) {
+  async getUserByEmail(email: string, isPassword: boolean = true) {
     return await prisma.user.findUnique({
+      select: {
+        id: true,
+        username: true,
+        email: true,
+        password: isPassword,
+        profile: true,
+      },
       where: { email }, // fixed by add unique attribute to email
+    });
+  }
+
+  async getUserSearch(search?: string) {
+    if (search) {
+      return await prisma.user.findMany({
+        include: {
+          profile: true,
+        },
+        where: {
+          OR: [
+            {
+              username: {
+                contains: search,
+              },
+            },
+          ],
+        },
+      });
+    }
+
+    return await prisma.user.findMany({
+      include: {
+        profile: true,
+      },
     });
   }
 

@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import userService from '../services/user.service';
 import authService from '../services/auth.service';
 
@@ -14,7 +14,7 @@ import { transportNodeMailer } from '../config/nodemailer-transporter';
 import { RegisterDTO } from '../dtos/auth.dto';
 
 class AuthController {
-  async login(req: Request, res: Response) {
+  async login(req: Request, res: Response, next: NextFunction) {
     /*  #swagger.requestBody = {
             required: true,
             content: {
@@ -61,18 +61,22 @@ class AuthController {
           expiresIn: '1 days',
         }
       );
+      const { ...userResponse } = user;
 
       res.json({
         message: 'Login success',
-        token,
+        data: {
+          user: userResponse,
+          token,
+        },
       });
     } catch (error) {
-      res.json(error);
+      next(error);
     }
     return;
   }
 
-  async register(req: Request, res: Response) {
+  async register(req: Request, res: Response, next: NextFunction) {
     /*  #swagger.requestBody = {
             required: true,
             content: {
@@ -100,12 +104,12 @@ class AuthController {
         data: { ...user },
       });
     } catch (error) {
-      res.json(error);
+      next(error);
     }
     return;
   }
 
-  async check(req: Request, res: Response) {
+  async check(req: Request, res: Response, next: NextFunction) {
     try {
       // const payload = (req as any).user; // fixed by defined an interface
       const payload = req.user; // fixed by defined an interface
@@ -123,12 +127,12 @@ class AuthController {
         data: user,
       });
     } catch (error) {
-      res.json(error);
+      next(error);
     }
     return;
   }
 
-  async forgotPassword(req: Request, res: Response) {
+  async forgotPassword(req: Request, res: Response, next: NextFunction) {
     /*  #swagger.requestBody = {
             required: true,
             content: {
@@ -168,12 +172,12 @@ class AuthController {
         message: 'Forgot password link sent!',
       });
     } catch (error) {
-      res.json(error);
+      next(error);
     }
     return;
   }
 
-  async resetPassword(req: Request, res: Response) {
+  async resetPassword(req: Request, res: Response, next: NextFunction) {
     /*  #swagger.requestBody = {
             required: true,
             content: {
@@ -229,7 +233,7 @@ class AuthController {
       );
       res.json(updatedUserPassword);
     } catch (error) {
-      res.json(error);
+      next(error);
     }
     return;
   }
