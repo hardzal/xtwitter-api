@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import userService from '../services/user.service';
 import {
   createUserSchema,
@@ -25,6 +25,22 @@ class UserController {
       res.json(error);
     }
     return;
+  }
+
+  async getUserSearch(req: Request, res: Response, next: NextFunction) {
+    try {
+      const q = req.query.q as string;
+
+      if (!q.trim()) {
+        res.json([]);
+        return;
+      }
+
+      const users = await userService.getUserSearch(q);
+      res.json(users);
+    } catch (error) {
+      next(error);
+    }
   }
 
   async createUser(req: Request, res: Response) {

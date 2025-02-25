@@ -1,7 +1,7 @@
 import { CreateLikeDTO } from '../dtos/likes.dto';
 import { prisma } from '../libs/prisma';
 
-class LikesService {
+class LikeService {
   // mendapatkan all likes
   async getLikes() {
     return await prisma.like.findMany();
@@ -71,4 +71,4 @@ class LikesService {
     });
   }
 }
-export default new LikesService();
+export default new LikeService();

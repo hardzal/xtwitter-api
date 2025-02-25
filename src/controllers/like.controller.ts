@@ -1,4 +1,4 @@
-import likesService from '../services/likes.service';
+import likesService from '../services/like.service';
 import { NextFunction, Request, Response } from 'express';
 
 class LikeController {

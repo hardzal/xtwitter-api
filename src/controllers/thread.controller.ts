@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { v2 as cloudinary, UploadApiResponse } from 'cloudinary';
 import threadService from '../services/thread.service';
 import { createThreadSchema } from '../utils/schemas/thread.schema';
-import likesService from '../services/likes.service';
+import likesService from '../services/like.service';
 import fs from 'fs';
 
 class ThreadController {
@@ -29,10 +29,12 @@ class ThreadController {
           const like = await likesService.getLike(userId, thread.id);
           const isLiked = like ? true : false;
           const likesCount = thread.likes.length;
+          const repliesCount = thread.replies.length;
 
           return {
             ...thread,
             likesCount,
+            repliesCount,
             isLiked,
           };
         })
@@ -49,7 +51,29 @@ class ThreadController {
   async getThreadById(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
+      const userId = req.user.id;
+
       const thread = await threadService.getThreadById(id);
+
+      if (!thread) {
+        res.status(404).json({
+          message: 'Thread is not found!',
+        });
+        return;
+      }
+
+      const like = await likesService.getLike(userId, thread.id);
+      const isLiked = like ? true : false;
+      const likesCount = thread?.likes.length;
+      const repliesCount = thread?.replies.length;
+
+      res.json({
+        ...thread,
+        likesCount,
+        repliesCount,
+        isLiked,
+      });
+
       res.json(thread);
     } catch (error) {
       next(error);

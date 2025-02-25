@@ -14,6 +14,7 @@ class ThreadService {
           },
         },
         likes: true,
+        replies: true,
       },
       take: pagination?.limit,
       skip: pagination?.startIndex,

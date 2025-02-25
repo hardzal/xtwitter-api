@@ -3,7 +3,11 @@ import { prisma } from '../libs/prisma';
 
 class UserService {
   async getUsers() {
-    return await prisma.user.findMany();
+    return await prisma.user.findMany({
+      include: {
+        profile: true,
+      },
+    });
   }
 
   async getUserById(id: string, isPassword: boolean = true) {
