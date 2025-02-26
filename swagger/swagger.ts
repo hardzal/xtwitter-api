@@ -74,7 +74,7 @@ const doc = {
           content: {
             type: 'string',
           },
-          Images: {
+          images: {
             type: 'file',
           },
         },

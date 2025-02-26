@@ -37,7 +37,7 @@ export async function authCheck(
   }
 
   // (req as any).user = user;
-  console.log(user);
+  // console.log(user);
   req.user = user;
   next();
 }

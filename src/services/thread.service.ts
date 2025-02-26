@@ -66,10 +66,10 @@ class ThreadService {
   async getThreadbyUsername() {}
 
   async createThread(userId: string, thread: CreateThreadDTO) {
-    const { content, Images } = thread;
+    const { content, images } = thread;
     return await prisma.thread.create({
       data: {
-        Images,
+        images,
         content,
         userId,
       },
@@ -77,12 +77,12 @@ class ThreadService {
   }
 
   async updateThread(id: string, thread: UpdateThreadDTO) {
-    const { content, Images } = thread;
+    const { content, images } = thread;
     return await prisma.thread.update({
       where: { id },
       data: {
         content,
-        Images,
+        images,
       },
     });
   }

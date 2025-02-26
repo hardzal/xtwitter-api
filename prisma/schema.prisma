@@ -56,7 +56,7 @@ model Thread {
   id String @id @default(uuid())
   
   content String
-  Images String[]
+  images String?
 
   user User @relation(fields: [userId], references: [id])
   userId String
@@ -107,7 +107,7 @@ model Reply {
   threadId String
   
   content String
-  images String[]
+  images String?
   
   user User @relation(fields: [userId], references: [id])
   userId String

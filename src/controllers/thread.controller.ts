@@ -1,10 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
-import { v2 as cloudinary, UploadApiResponse } from 'cloudinary';
+import { v2 as cloudinary } from 'cloudinary';
 import threadService from '../services/thread.service';
 import { createThreadSchema } from '../utils/schemas/thread.schema';
 import likesService from '../services/like.service';
-import fs from 'fs';
-
+import streamifier from 'streamifier';
 class ThreadController {
   // get all Thread
   async getThreads(req: Request, res: Response, next: NextFunction) {
@@ -106,26 +105,49 @@ class ThreadController {
         } 
     */
     try {
-      let uploadResult: UploadApiResponse = {} as UploadApiResponse;
-
+      let imageUrl: string = '';
       if (req.file) {
-        uploadResult = await cloudinary.uploader.upload(req.file?.path || '');
-        fs.unlinkSync(req.file.path);
+        imageUrl = await new Promise((resolve, reject) => {
+          try {
+            const stream = cloudinary.uploader.upload_stream(
+              {
+                folder: 'dumbways/threads',
+              },
+              (error, result) => {
+                if (error) return console.error(error);
+                resolve(result?.secure_url || '');
+              }
+            );
+            streamifier.createReadStream(req?.file?.buffer || '').pipe(stream);
+          } catch (error) {
+            console.log('error upload');
+            reject(error);
+          }
+        });
       }
-
       const body = {
         ...req.body,
-        images: uploadResult.secure_url ?? undefined,
+        images: imageUrl || undefined,
       };
 
       const userId = req.user.id;
       const validatedBody = await createThreadSchema.validateAsync(body);
-      const thread = threadService.createThread(userId, validatedBody);
-      res.json({
-        message: 'Thread created!',
-        data: { ...thread },
-      });
+      const thread = await threadService.createThread(userId, validatedBody);
+
+      console.log(thread);
+      if (thread) {
+        res.status(201).json({
+          message: 'Thread created!',
+          data: { ...thread },
+        });
+      } else {
+        res.status(500).json({
+          message: 'Thread failed to created!',
+        });
+      }
     } catch (error) {
+      console.log('error coy');
+      console.log(error);
       next(error);
     }
     return;

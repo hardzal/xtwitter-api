@@ -461,13 +461,6 @@
         "description": "",
         "parameters": [
           {
-            "name": "authorization",
-            "in": "header",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
             "name": "page",
             "in": "query",
             "schema": {
@@ -485,16 +478,8 @@
         "responses": {
           "200": {
             "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
           }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
+        }
       },
       "post": {
         "description": "",
@@ -1027,7 +1012,7 @@
           "content": {
             "type": "string"
           },
-          "Images": {
+          "images": {
             "type": "file"
           }
         }
