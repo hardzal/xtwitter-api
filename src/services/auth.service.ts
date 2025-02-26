@@ -25,6 +25,15 @@ class AuthService {
       },
     });
   }
+
+  async verifyEmail(email: string) {
+    return await prisma.user.update({
+      where: { email },
+      data: {
+        verify: true,
+      },
+    });
+  }
 }
 
 export default new AuthService();

@@ -1,13 +1,14 @@
 import express from 'express';
 import userController from '../controllers/user.controller';
+import { authCheck } from '../middlewares/auth-check.middleware';
 
 const router = express.Router();
 
-router.get('/', userController.getUsers);
+router.get('/', authCheck, userController.getUsers);
 router.get('/search', userController.getUserSearch);
-router.get('/:id', userController.getUserById);
-router.post('/', userController.createUser);
-router.patch('/:id', userController.updateUserById);
-router.delete('/:id', userController.deleteUserById);
+router.get('/:id', authCheck, userController.getUserById);
+router.post('/', authCheck, userController.createUser);
+router.patch('/:id', authCheck, userController.updateUserById);
+router.delete('/:id', authCheck, userController.deleteUserById);
 
 export default router;

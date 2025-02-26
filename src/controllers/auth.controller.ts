@@ -3,6 +3,7 @@ import userService from '../services/user.service';
 import authService from '../services/auth.service';
 
 import {
+  ChangePasswordSchema,
   forgotPasswordSchema,
   loginSchema,
   registerSchema,
@@ -92,15 +93,38 @@ class AuthController {
       const body = req.body;
       const validatedBody = await registerSchema.validateAsync(body);
       const hashedPassword = await bcrypt.hash(validatedBody.password, 10);
+      const email = validatedBody.email;
 
       const registerBody: RegisterDTO = {
         ...validatedBody,
         password: hashedPassword,
       };
 
+      const jwtSecret = process.env.JWT_SECRET || '';
+
+      const token = jwt.sign({ email }, jwtSecret, {
+        expiresIn: '1 days',
+      });
+
+      const frontEndUrl = process.env.FRONTEND_BASE_URL || '';
+
+      const resetPasswordLink = `${frontEndUrl}/verify-email?token=${token}`;
+
+      const emailOptions = {
+        from: 'rizaldoeta98@gmail.com',
+        to: email,
+        subject: 'Circle | Verify Email',
+        html: `
+        <h1>This is link for verify your email:</h1><br/>
+        Click here <strong><a href="${resetPasswordLink}">${resetPasswordLink}</a></strong>
+      `,
+      };
+
+      await transportNodeMailer.sendMail(emailOptions);
+
       const user = await authService.register(registerBody);
       res.status(200).json({
-        message: 'Register success!',
+        message: 'Register success, check your email!',
         data: { ...user },
       });
     } catch (error) {
@@ -155,6 +179,7 @@ class AuthController {
       });
 
       const frontEndUrl = process.env.FRONTEND_BASE_URL || '';
+
       const resetPasswordLink = `${frontEndUrl}/reset-password?token=${token}`;
 
       const emailOptions = {
@@ -190,20 +215,65 @@ class AuthController {
         } 
     */
     try {
+      const payload = req.user; // shorterm
+      const body = req.body;
+
+      const { newPassword } = await ResetPasswordSchema.validateAsync(body);
+
+      const user = await userService.getUserByEmail(payload!.email);
+
+      if (!user) {
+        res.status(404).json({
+          message: 'User not found!',
+        });
+        return;
+      }
+
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+      const updatedUserPassword = await authService.resetPassword(
+        user.email,
+        hashedPassword
+      );
+
+      res.json({
+        message: 'Success reset your password!',
+        data: updatedUserPassword,
+      });
+    } catch (error) {
+      next(error);
+    }
+    return;
+  }
+
+  async changePassword(req: Request, res: Response, next: NextFunction) {
+    /*  #swagger.requestBody = {
+            required: true,
+            content: {
+                "application/json": {
+                    schema: {
+                        $ref: "#/components/schemas/ChangePasswordDTO"
+                    }  
+                }
+            }
+        } 
+    */
+    try {
       // const payload = (req as any).user; // shorterm
       const payload = req.user; // shorterm
       const body = req.body;
 
       const { oldPassword, newPassword } =
-        await ResetPasswordSchema.validateAsync(body);
+        await ChangePasswordSchema.validateAsync(body);
 
+      // /// this process for change password
       if (oldPassword === newPassword) {
         res.status(400).json({
           message: 'Password cannot be the same as previous!',
         });
         return;
       }
-      console.log(payload);
+
       const user = await userService.getUserByEmail(payload!.email);
 
       if (!user) {
@@ -231,23 +301,38 @@ class AuthController {
         user.email,
         hashedPassword
       );
-      res.json(updatedUserPassword);
+
+      res.json({
+        message: 'Success change your password!',
+        data: updatedUserPassword,
+      });
     } catch (error) {
       next(error);
     }
     return;
   }
 
-  async verifyEmail(req: Request, res: Response) {
+  async verifyEmail(req: Request, res: Response, next: NextFunction) {
     try {
-      // user mendaftar
-      // sistem mengirim link konfirmasi email
-      // user mengakses link konfirmasi email
-      // user terkonfirmasi emailnya
+      const payload = req.user;
 
-      res.json();
+      const user = await userService.getUserByEmail(payload!.email);
+
+      if (!user) {
+        res.status(404).json({
+          message: 'User not found!',
+        });
+        return;
+      }
+
+      const verifyEmail = await authService.verifyEmail(user.email);
+
+      res.json({
+        message: 'Success verify your email!',
+        data: verifyEmail,
+      });
     } catch (error) {
-      res.json(error);
+      next(error);
     }
     return;
   }

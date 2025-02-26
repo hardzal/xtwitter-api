@@ -20,7 +20,11 @@ class ReplyService {
     return await prisma.reply.findMany({
       where: { threadId },
       include: {
-        user: true,
+        user: {
+          omit: {
+            password: true,
+          },
+        },
         thread: true,
       },
     });

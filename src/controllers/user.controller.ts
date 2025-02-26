@@ -6,23 +6,23 @@ import {
 } from '../utils/schemas/user.schema';
 
 class UserController {
-  async getUsers(req: Request, res: Response) {
+  async getUsers(req: Request, res: Response, next: NextFunction) {
     try {
       const users = await userService.getUsers();
       res.json(users);
     } catch (error) {
-      res.json(error);
+      next(error);
     }
     return;
   }
 
-  async getUserById(req: Request, res: Response) {
+  async getUserById(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
       const user = await userService.getUserById(id);
       res.json(user);
     } catch (error) {
-      res.json(error);
+      next(error);
     }
     return;
   }
@@ -43,19 +43,30 @@ class UserController {
     }
   }
 
-  async createUser(req: Request, res: Response) {
+  async createUser(req: Request, res: Response, next: NextFunction) {
+    /*  #swagger.requestBody = {
+            required: true,
+            content: {
+              "multipart/form-data": {
+                    schema: {
+                        $ref: "#/components/schemas/CreateUserDTO"
+                    }  
+                }
+            }
+        } 
+    */
     try {
       const body = req.body;
       const validateBody = await createUserSchema.validateAsync(body);
       const user = await userService.createUser(validateBody);
       res.json(user);
     } catch (error) {
-      res.json(error);
+      next(error);
     }
     return;
   }
 
-  async updateUserById(req: Request, res: Response) {
+  async updateUserById(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
       const body = req.body;
@@ -81,19 +92,19 @@ class UserController {
       const updateUser = await userService.updateUserById(id, user);
       res.json(updateUser);
     } catch (error) {
-      res.json(error);
+      next(error);
     }
     return;
   }
 
-  async deleteUserById(req: Request, res: Response) {
+  async deleteUserById(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
 
       const user = await userService.deleteUserById(id);
       res.json(user);
     } catch (error) {
-      res.json(error);
+      next(error);
     }
     return;
   }

@@ -52,7 +52,18 @@ const doc = {
       ResetPasswordDTO: {
         type: 'object',
         properties: {
-          email: {
+          newPassword: {
+            type: 'string',
+          },
+        },
+      },
+      ChangePasswordDTO: {
+        type: 'object',
+        properties: {
+          oldPassword: {
+            type: 'string',
+          },
+          newPassword: {
             type: 'string',
           },
         },
@@ -65,6 +76,23 @@ const doc = {
           },
           Images: {
             type: 'file',
+          },
+        },
+      },
+      CreateUserDTO: {
+        type: 'object',
+        properties: {
+          username: {
+            type: 'string',
+          },
+          email: {
+            type: 'string',
+          },
+          password: {
+            type: 'string',
+          },
+          fullName: {
+            type: 'string',
           },
         },
       },

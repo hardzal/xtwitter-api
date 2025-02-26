@@ -1,6 +1,7 @@
 import Joi from '../../../node_modules/joi/lib/index';
 
 import {
+  ChangePasswordDTO,
   LoginDTO,
   RegisterDTO,
   ResetPasswordDTO,
@@ -24,6 +25,10 @@ export const forgotPasswordSchema = Joi.object<forgotPasswordDTO>({
 });
 
 export const ResetPasswordSchema = Joi.object<ResetPasswordDTO>({
+  newPassword: Joi.string().min(8).required(),
+});
+
+export const ChangePasswordSchema = Joi.object<ChangePasswordDTO>({
   oldPassword: Joi.string().min(8).required(),
   newPassword: Joi.string().min(8).required(),
 });

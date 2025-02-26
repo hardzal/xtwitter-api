@@ -19,6 +19,7 @@ model User {
   username String @unique
   email String @unique
   password String
+  verify Boolean @default(false)
 
   profile Profile?
   threads Thread[]

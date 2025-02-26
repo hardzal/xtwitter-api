@@ -13,10 +13,18 @@ export async function authCheck(
             "bearerAuth": []
     }] */
   let token = req.headers['authorization'] || '';
+
   if (token.split(' ').length > 1) {
     token = token.split(' ')[1];
   }
-  console.log('ini tokennya: ', token);
+
+  if (token === '') {
+    res.status(401).json({
+      message: 'Unauthorized',
+      token: token,
+    });
+    return;
+  }
 
   const jwtSecret = process.env.JWT_SECRET || '';
   const user = jwt.verify(token, jwtSecret);
