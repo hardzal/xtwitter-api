@@ -79,6 +79,17 @@ const doc = {
           },
         },
       },
+      UpdateThreadDTO: {
+        type: 'object',
+        properties: {
+          content: {
+            type: 'string',
+          },
+          images: {
+            type: 'file',
+          },
+        },
+      },
       CreateUserDTO: {
         type: 'object',
         properties: {

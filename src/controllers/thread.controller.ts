@@ -3,7 +3,8 @@ import { v2 as cloudinary } from 'cloudinary';
 import threadService from '../services/thread.service';
 import { createThreadSchema } from '../utils/schemas/thread.schema';
 import likesService from '../services/like.service';
-import streamifier from 'streamifier';
+import uploadImage from '../utils/upload';
+
 class ThreadController {
   // get all Thread
   async getThreads(req: Request, res: Response, next: NextFunction) {
@@ -50,7 +51,6 @@ class ThreadController {
   async getThreadById(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const userId = req.user.id;
 
       const thread = await threadService.getThreadById(id);
 
@@ -60,9 +60,14 @@ class ThreadController {
         });
         return;
       }
+      let isLiked = false;
 
-      const like = await likesService.getLike(userId, thread.id);
-      const isLiked = like ? true : false;
+      if (req.user) {
+        const userId = req.user.id;
+        const like = await likesService.getLike(userId, thread.id);
+        isLiked = like ? true : false;
+      }
+
       const likesCount = thread?.likes.length;
       const repliesCount = thread?.replies.length;
 
@@ -72,9 +77,9 @@ class ThreadController {
         repliesCount,
         isLiked,
       });
-
-      res.json(thread);
     } catch (error) {
+      console.log('error here');
+      console.log(error);
       next(error);
     }
     return;
@@ -107,23 +112,7 @@ class ThreadController {
     try {
       let imageUrl: string = '';
       if (req.file) {
-        imageUrl = await new Promise((resolve, reject) => {
-          try {
-            const stream = cloudinary.uploader.upload_stream(
-              {
-                folder: 'dumbways/threads',
-              },
-              (error, result) => {
-                if (error) return console.error(error);
-                resolve(result?.secure_url || '');
-              }
-            );
-            streamifier.createReadStream(req?.file?.buffer || '').pipe(stream);
-          } catch (error) {
-            console.log('error upload');
-            reject(error);
-          }
-        });
+        imageUrl = await uploadImage('dumbways/threads', req);
       }
       const body = {
         ...req.body,
@@ -155,16 +144,41 @@ class ThreadController {
 
   // update thread:
   async updateThread(req: Request, res: Response, next: NextFunction) {
+    /*  #swagger.requestBody = {
+            required: true,
+            content: {
+              "multipart/form-data": {
+                    schema: {
+                        $ref: "#/components/schemas/UpdateThreadDTO"
+                    }  
+                }
+            }
+        } 
+    // */
+
     try {
-      let body;
-      if (req.file !== null) {
-        const uploadResult = await cloudinary.uploader.upload(
-          req.file?.path || ''
-        );
+      let body: object = {};
+      let imageUrl: string = '';
+
+      const data = await threadService.getThreadById(req.body.id);
+
+      if (data?.images) {
+        const images = data?.images
+          .split('/')
+          .splice(7, 4)
+          .join('/')
+          .split('.')[0];
+        cloudinary.uploader.destroy(images, function (result) {
+          console.log('Succesfuly deleted image!', result);
+        });
+      }
+
+      if (req.file) {
+        imageUrl = await uploadImage('dumbways/threads', req);
 
         body = {
           ...req.body,
-          images: uploadResult.secure_url,
+          images: imageUrl || undefined,
         };
       } else {
         body = req.body;
@@ -172,8 +186,10 @@ class ThreadController {
 
       const userId = req.user.id;
       const validatedBody = await createThreadSchema.validateAsync(body);
-      const thread = threadService.createThread(userId, validatedBody);
-      res.json(thread);
+      const thread = threadService.updateThread(userId, validatedBody);
+      res
+        .status(202)
+        .json({ message: 'Succesfully updated the thread!', ...thread });
     } catch (error) {
       next(error);
     }
@@ -182,9 +198,23 @@ class ThreadController {
   // delete thread
   async deleteThread(req: Request, res: Response, next: NextFunction) {
     try {
-      const { id } = req.params;
-      const thread = await threadService.deleteThread(id);
-      res.json(thread);
+      const data = await threadService.getThreadById(req.body.id);
+
+      if (data?.images) {
+        const images = data?.images
+          .split('/')
+          .splice(7, 4)
+          .join('/')
+          .split('.')[0];
+        cloudinary.uploader.destroy(images, function (result) {
+          console.log('Succesfuly deleted image!', result);
+        });
+      }
+
+      const thread = await threadService.deleteThread(req.body.id);
+      res
+        .status(204)
+        .json({ message: 'Succesfully deleted the image!', ...thread });
     } catch (error) {
       next(error);
     }
