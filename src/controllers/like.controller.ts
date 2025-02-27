@@ -1,20 +1,13 @@
 import likesService from '../services/like.service';
 import { NextFunction, Request, Response } from 'express';
+import {
+  createLikeSchema,
+  deleteLikeSchema,
+} from '../utils/schemas/like.schema';
+import likeService from '../services/like.service';
 
 class LikeController {
   async getLikes(req: Request, res: Response, next: NextFunction) {
-    /*  #swagger.requestBody = {
-                  required: true,
-                  content: {
-                      "application/json": {
-                          schema: {
-                              $ref: "#/components/schemas/CreateLikeDTO"
-                          }  
-                      }
-                  }
-              } 
-          */
-
     try {
       const likes = await likesService.getLikes();
       res.json(likes);
@@ -56,9 +49,21 @@ class LikeController {
   }
 
   async createLike(req: Request, res: Response, next: NextFunction) {
+    /*  #swagger.requestBody = {
+                  required: true,
+                  content: {
+                      "application/json": {
+                          schema: {
+                              $ref: "#/components/schemas/CreateLikeDTO"
+                          }  
+                      }
+                  }
+              } 
+          */
     try {
       const body = req.body;
-      const { userId, threadId } = body;
+      const userId = req.user.id;
+      const { threadId } = await createLikeSchema.validateAsync(body);
 
       const like = await likesService.getLike(userId, threadId);
       if (like) {
@@ -68,8 +73,10 @@ class LikeController {
         });
         return;
       }
-      const likeData = await likesService.createLike(body);
-      res.json(likeData);
+      await likesService.createLike(userId, threadId);
+      res.json({
+        message: 'Like success!',
+      });
     } catch (error) {
       next(error);
     }
@@ -78,9 +85,21 @@ class LikeController {
 
   async deleteLike(req: Request, res: Response, next: NextFunction) {
     try {
-      const { threadId, userId } = req.body;
-      const like = await likesService.deleteLike(threadId, userId);
-      res.json(like);
+      const { threadId } = await deleteLikeSchema.validateAsync(
+        req.params.threadId
+      );
+      const userId = req.user.id;
+      const like = await likeService.getLike(userId, threadId);
+      if (!like) {
+        res.status(404).json({
+          message: 'Like not found!',
+        });
+        return;
+      }
+      await likesService.deleteLike(like.id);
+      res.json({
+        message: 'Unlike success!',
+      });
     } catch (error) {
       next(error);
     }

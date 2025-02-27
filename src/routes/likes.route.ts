@@ -4,6 +4,7 @@ import { rateLimit } from 'express-rate-limit';
 import { RedisStore } from 'rate-limit-redis';
 
 import likeController from '../controllers/like.controller';
+import { authCheck } from '../middlewares/auth-check.middleware';
 
 const router = express.Router();
 
@@ -29,7 +30,7 @@ router.get('/', likeController.getLikes);
 router.get('/:threadId', likeController.getLikesByTheadId);
 router.get('/:userId', likeController.getLikesByUserId);
 router.get('/:id', likeController.getLike);
-router.post('/', likeController.createLike);
-router.delete('/:id', likeController.deleteLike);
+router.post('/', authCheck, likeController.createLike);
+router.delete('/:threadId', authCheck, likeController.deleteLike);
 
 export default router;

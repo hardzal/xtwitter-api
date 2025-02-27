@@ -1,4 +1,3 @@
-import { CreateLikeDTO } from '../dtos/likes.dto';
 import { prisma } from '../libs/prisma';
 
 class LikeService {
@@ -51,16 +50,19 @@ class LikeService {
   }
 
   // create likes
-  async createLike(data: CreateLikeDTO) {
+  async createLike(userId: string, threadId: string) {
     return await prisma.like.create({
-      data: data,
+      data: {
+        userId,
+        threadId,
+      },
     });
   }
 
   // delete likes
-  async deleteLike(userId: string, threadId: string) {
+  async deleteLike(id: string) {
     return await prisma.like.delete({
-      where: { userId, threadId },
+      where: { id },
     });
   }
 
