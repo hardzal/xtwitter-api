@@ -107,6 +107,23 @@ const doc = {
           },
         },
       },
+      UpdateProfileDTO: {
+        type: 'object',
+        properties: {
+          fullName: {
+            type: 'string',
+          },
+          avatar: {
+            type: 'file',
+          },
+          bannerURL: {
+            type: 'file',
+          },
+          bio: {
+            type: 'string',
+          },
+        },
+      },
       CreateLikeDTO: {
         type: 'object',
         properties: {

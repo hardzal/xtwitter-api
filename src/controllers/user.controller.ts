@@ -9,7 +9,10 @@ class UserController {
   async getUsers(req: Request, res: Response, next: NextFunction) {
     try {
       const users = await userService.getUsers();
-      res.json(users);
+      res.json({
+        message: 'succesfully get all users',
+        data: users,
+      });
     } catch (error) {
       next(error);
     }
@@ -20,7 +23,10 @@ class UserController {
     try {
       const { id } = req.params;
       const user = await userService.getUserById(id);
-      res.json(user);
+      res.json({
+        message: 'succesfully get user data',
+        data: user,
+      });
     } catch (error) {
       next(error);
     }
@@ -37,7 +43,16 @@ class UserController {
       }
 
       const users = await userService.getUserSearch(q);
-      res.json(users);
+      if (users.length > 0) {
+        res.status(200).json({
+          message: 'get all data search users!',
+          data: users,
+        });
+      } else {
+        res.status(404).json({
+          message: 'Not found',
+        });
+      }
     } catch (error) {
       next(error);
     }

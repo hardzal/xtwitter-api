@@ -1,6 +1,6 @@
 import { Profile, User } from '@prisma/client';
 
-type ProfileUser = Profile & {
+export type ProfileUser = Profile & {
   username: User['username'];
   email: User['email'];
 };

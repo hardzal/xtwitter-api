@@ -3,7 +3,7 @@ import { v2 as cloudinary } from 'cloudinary';
 import threadService from '../services/thread.service';
 import { createThreadSchema } from '../utils/schemas/thread.schema';
 import likesService from '../services/like.service';
-import uploadImage from '../utils/upload';
+import { uploadImageSingle } from '../utils/upload';
 
 class ThreadController {
   // get all Thread
@@ -112,7 +112,7 @@ class ThreadController {
     try {
       let imageUrl: string = '';
       if (req.file) {
-        imageUrl = await uploadImage('dumbways/threads', req);
+        imageUrl = await uploadImageSingle('dumbways/threads', req);
       }
       const body = {
         ...req.body,
@@ -174,7 +174,7 @@ class ThreadController {
       }
 
       if (req.file) {
-        imageUrl = await uploadImage('dumbways/threads', req);
+        imageUrl = await uploadImageSingle('dumbways/threads', req);
 
         body = {
           ...req.body,
