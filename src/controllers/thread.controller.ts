@@ -85,13 +85,39 @@ class ThreadController {
     return;
   }
 
-  async getThreadByUserId(req: Request, res: Response) {
+  async getThreadByUserId(req: Request, res: Response, next: NextFunction) {
     try {
       const { userId } = req.params;
-      const thread = await threadService.getThreadByUserId(userId);
-      res.json(thread);
+
+      const threads = await threadService.getThreadByUserId(userId);
+
+      if (!threads) {
+        res.status(404).json({
+          message: 'Thread is not found!',
+        });
+        return;
+      }
+      const newThreads = await Promise.all(
+        threads.map(async (thread) => {
+          const like = await likesService.getLike(userId, thread.id);
+          const isLiked = like ? true : false;
+          const likesCount = thread.likes.length;
+          const repliesCount = thread.replies.length;
+
+          return {
+            ...thread,
+            likesCount,
+            repliesCount,
+            isLiked,
+          };
+        })
+      );
+
+      res.json(newThreads);
     } catch (error) {
-      res.json(error);
+      console.log('error here');
+      console.log(error);
+      next(error);
     }
     return;
   }

@@ -56,7 +56,15 @@ class ThreadService {
             profile: true,
           },
         },
-        replies: true,
+        replies: {
+          include: {
+            user: {
+              include: {
+                profile: true,
+              },
+            },
+          },
+        },
         likes: true,
       },
     });

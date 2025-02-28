@@ -7,6 +7,7 @@ import { rateLimit } from '../middlewares/rate-limit.middleware';
 const router = express.Router();
 router.use(rateLimit('thread'));
 router.get('/', threadController.getThreads);
+router.get('/:userId/user', threadController.getThreadByUserId);
 router.get('/:id', threadController.getThreadById);
 router.post(
   '/',
