@@ -2,9 +2,10 @@ import express from 'express';
 import threadController from '../controllers/thread.controller';
 import { authCheck } from '../middlewares/auth-check.middleware';
 import { uploadImage } from '../middlewares/upload.middleware';
+import { rateLimit } from '../middlewares/rate-limit.middleware';
 
 const router = express.Router();
-
+router.use(rateLimit('thread'));
 router.get('/', threadController.getThreads);
 router.get('/:id', threadController.getThreadById);
 router.post(
