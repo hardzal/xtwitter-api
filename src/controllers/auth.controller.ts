@@ -92,8 +92,15 @@ class AuthController {
     try {
       const body = req.body;
       const validatedBody = await registerSchema.validateAsync(body);
-      const hashedPassword = await bcrypt.hash(validatedBody.password, 10);
       const email = validatedBody.email;
+
+      const checkUser = await userService.getUserByEmail(email);
+      if (checkUser) {
+        res.status(406).json({ message: 'Email already registered!' });
+        return;
+      }
+
+      const hashedPassword = await bcrypt.hash(validatedBody.password, 10);
 
       const registerBody: RegisterDTO = {
         ...validatedBody,
