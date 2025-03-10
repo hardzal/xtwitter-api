@@ -1,21 +1,76 @@
+import { NextFunction, Request, Response } from 'express';
+import followService from '../services/follow.service';
+import {
+  createFollowSchema,
+  deleteFollowSchema,
+} from '../utils/schemas/follows.schema';
+
 class FollowController {
   async getFollows() {}
 
-  async getFollowersByUserId() {}
+  async getFollowersByUserId(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { userId } = req.params;
+      const followers = await followService.getFollowers(userId);
 
-  async getFollowersByUsername() {}
+      res.json(followers);
+    } catch (error) {
+      next(error);
+    }
+  }
 
-  async getFollowingsByUserId() {}
+  async getFollowingsByUserId(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { userId } = req.params;
+      const followings = await followService.getFollowings(userId);
 
-  async getFollowingsByUsername() {}
+      res.json(followings);
+    } catch (error) {
+      next(error);
+    }
+  }
 
-  async createFollowerByUserId() {}
+  async createFollowByUserId(req: Request, res: Response, next: NextFunction) {
+    try {
+      const body = req.body;
+      const { followedId, followingId } =
+        await createFollowSchema.validateAsync(body);
 
-  async createFollowingByUserId() {}
+      await followService.createFollow(followedId, followingId);
+      res.json({
+        message: 'Follow success!',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 
-  async deleteFollowerByUserId() {}
+  async deleteFollowByUserId(req: Request, res: Response, next: NextFunction) {
+    try {
+      const body = req.body;
+      const { followedId, followingId } =
+        await deleteFollowSchema.validateAsync(body);
+      const follow = await followService.getFollowsDetails(
+        followedId,
+        followingId
+      );
 
-  async deleteFollowingByUserId() {}
+      if (!follow) {
+        res.json({
+          status: 404,
+          message: 'Follows detail not found',
+        });
+        return;
+      }
+
+      await followService.deleteFollow(follow.id);
+      res.json({
+        message: 'Unfollow success!',
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 export default new FollowController();

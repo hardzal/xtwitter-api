@@ -282,6 +282,9 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "406": {
+            "description": "Not Acceptable"
           }
         },
         "requestBody": {
@@ -558,6 +561,29 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/api/threads/{userId}/user": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
           }
         }
       }

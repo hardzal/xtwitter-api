@@ -7,13 +7,9 @@ const router = express.Router();
 router.get('/', followController.getFollows);
 
 router.get('/followers/:userId', followController.getFollowersByUserId);
-router.get('/followers/:username', followController.getFollowersByUsername);
 router.get('/folowings/:userId', followController.getFollowingsByUserId);
-router.get('/followings/:username', followController.getFollowingsByUsername);
 
-router.post('/followers/:userId', followController.createFollowerByUserId);
-router.post('/followings/:userId', followController.createFollowingByUserId);
-router.delete('/:userId', followController.deleteFollowingByUserId);
-router.delete('/:userId', followController.deleteFollowerByUserId);
+router.post('/follows/:userId', followController.createFollowByUserId);
+router.delete('/:userId', followController.deleteFollowByUserId);
 
 export default router;
