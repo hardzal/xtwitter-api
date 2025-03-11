@@ -9,7 +9,7 @@ router.get('/', followController.getFollows);
 router.get('/followers/:userId', followController.getFollowersByUserId);
 router.get('/folowings/:userId', followController.getFollowingsByUserId);
 
-router.post('/follows/:userId', followController.createFollowByUserId);
+router.post('/:userId', followController.createFollowByUserId);
 router.delete('/:userId', followController.deleteFollowByUserId);
 
 export default router;

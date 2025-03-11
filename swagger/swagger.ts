@@ -136,9 +136,25 @@ const doc = {
         },
       },
       CreateReplyDTO: {
-        type: 'Object',
+        type: 'object',
         properties: {
           content: {
+            type: 'string',
+          },
+        },
+      },
+      CreateFollowDTO: {
+        type: 'object',
+        properties: {
+          followedId: {
+            type: 'string',
+          },
+        },
+      },
+      DeleteFollowDTO: {
+        type: 'object',
+        properties: {
+          followedId: {
             type: 'string',
           },
         },

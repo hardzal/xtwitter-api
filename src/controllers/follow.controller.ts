@@ -12,7 +12,13 @@ class FollowController {
     try {
       const { userId } = req.params;
       const followers = await followService.getFollowers(userId);
-
+      if (followers.length === 0) {
+        res.json({
+          status: 204,
+          data: 'Not found!',
+        });
+        return;
+      }
       res.json(followers);
     } catch (error) {
       next(error);
@@ -23,7 +29,13 @@ class FollowController {
     try {
       const { userId } = req.params;
       const followings = await followService.getFollowings(userId);
-
+      if (followings.length === 0) {
+        res.json({
+          status: 204,
+          data: 'Not found!',
+        });
+        return;
+      }
       res.json(followings);
     } catch (error) {
       next(error);
@@ -31,12 +43,37 @@ class FollowController {
   }
 
   async createFollowByUserId(req: Request, res: Response, next: NextFunction) {
+    /*  #swagger.requestBody = {
+                  required: true,
+                  content: {
+                      "application/json": {
+                          schema: {
+                              $ref: "#/components/schemas/CreateFollowDTO"
+                          }  
+                      }
+                  }
+              } 
+          */
     try {
       const body = req.body;
-      const { followedId, followingId } =
-        await createFollowSchema.validateAsync(body);
+      const followingId = req.params.userId;
+      const { followedId } = await createFollowSchema.validateAsync(body);
+      if (followedId === followingId) {
+        res.json({
+          status: 403,
+          message: "You can't follow your ownself",
+        });
+        return;
+      }
+      const follow = await followService.createFollow(followedId, followingId);
 
-      await followService.createFollow(followedId, followingId);
+      if (!follow) {
+        res.json({
+          status: 500,
+          message: 'Follow failed!',
+        });
+        return;
+      }
       res.json({
         message: 'Follow success!',
       });
@@ -46,10 +83,21 @@ class FollowController {
   }
 
   async deleteFollowByUserId(req: Request, res: Response, next: NextFunction) {
+    /*  #swagger.requestBody = {
+                  required: true,
+                  content: {
+                      "application/json": {
+                          schema: {
+                              $ref: "#/components/schemas/DeleteFollowDTO"
+                          }  
+                      }
+                  }
+              } 
+          */
     try {
       const body = req.body;
-      const { followedId, followingId } =
-        await deleteFollowSchema.validateAsync(body);
+      const followingId = req.params.userId;
+      const { followedId } = await deleteFollowSchema.validateAsync(body);
       const follow = await followService.getFollowsDetails(
         followedId,
         followingId
