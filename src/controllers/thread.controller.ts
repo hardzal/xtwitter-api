@@ -1,7 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
 import { v2 as cloudinary } from 'cloudinary';
 import threadService from '../services/thread.service';
-import { createThreadSchema } from '../utils/schemas/thread.schema';
+import {
+  createThreadSchema,
+  updateThreadSchema,
+} from '../utils/schemas/thread.schema';
 import likesService from '../services/like.service';
 import { uploadImageSingle } from '../utils/upload';
 
@@ -185,22 +188,24 @@ class ThreadController {
     try {
       let body: object = {};
       let imageUrl: string = '';
-
+      const id = req.params.id;
       const data = await threadService.getThreadById(req.body.id);
 
-      if (data?.images) {
-        const images = data?.images
-          .split('/')
-          .splice(7, 4)
-          .join('/')
-          .split('.')[0];
-        cloudinary.uploader.destroy(images, function (result) {
-          console.log('Succesfuly deleted image!', result);
-        });
-      }
+      const oldImages: string = data?.images as string;
 
       if (req.file) {
         imageUrl = await uploadImageSingle('dumbways/threads', req);
+
+        if (data?.images) {
+          const images = data?.images
+            .split('/')
+            .splice(7, 4)
+            .join('/')
+            .split('.')[0];
+          cloudinary.uploader.destroy(images, function (result) {
+            console.log('Succesfuly deleted image!', result);
+          });
+        }
 
         body = {
           ...req.body,
@@ -209,10 +214,14 @@ class ThreadController {
       } else {
         body = req.body;
       }
+      const validatedBody = await updateThreadSchema.validateAsync(body);
 
-      const userId = req.user.id;
-      const validatedBody = await createThreadSchema.validateAsync(body);
-      const thread = threadService.updateThread(userId, validatedBody);
+      if (!validatedBody.images) {
+        validatedBody.images = oldImages;
+      }
+
+      const thread = await threadService.updateThread(id, validatedBody);
+
       res
         .status(202)
         .json({ message: 'Succesfully updated the thread!', ...thread });

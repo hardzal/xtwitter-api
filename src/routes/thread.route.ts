@@ -15,7 +15,7 @@ router.post(
   uploadImage.single('images'),
   threadController.createThread
 );
-router.patch(
+router.put(
   '/:id',
   authCheck,
   uploadImage.single('images'),
