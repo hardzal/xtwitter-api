@@ -34,7 +34,7 @@ class LikeReplyService {
   }
 
   // mendapatkan all likes by threadId
-  async getLikesByThreadId(replyId: string) {
+  async getLikesByReplyId(replyId: string) {
     return await prisma.likeReply.findMany({
       where: { replyId },
       include: {
