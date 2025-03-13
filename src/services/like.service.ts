@@ -59,13 +59,6 @@ class LikeService {
     });
   }
 
-  // delete likes
-  async deleteLike(id: string) {
-    return await prisma.like.delete({
-      where: { id },
-    });
-  }
-
   // delete likes by id
   async deleteLikeById(id: string) {
     return await prisma.like.delete({

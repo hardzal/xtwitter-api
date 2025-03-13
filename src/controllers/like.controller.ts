@@ -96,7 +96,7 @@ class LikeController {
         });
         return;
       }
-      await likesService.deleteLike(like.id);
+      await likesService.deleteLikeById(like.id);
       res.json({
         message: 'Unlike success!',
       });
