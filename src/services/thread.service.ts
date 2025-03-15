@@ -91,9 +91,7 @@ class ThreadService {
 
   async updateThread(id: string, thread: UpdateThreadDTO) {
     const { content, images } = thread;
-    console.log(thread);
-    console.log(content);
-    console.log(images);
+
     return await prisma.thread.update({
       where: { id },
       data: {

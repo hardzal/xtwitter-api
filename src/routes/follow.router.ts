@@ -5,7 +5,7 @@ const router = express.Router();
 
 // rekoemdasi akun
 router.get('/', followController.getFollows);
-
+router.get('/:userId/count', followController.getFollowCountByUserId);
 router.get('/:userId/followers', followController.getFollowersByUserId);
 router.get('/:userId/followings', followController.getFollowingsByUserId);
 

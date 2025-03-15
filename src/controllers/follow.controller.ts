@@ -8,6 +8,31 @@ import {
 class FollowController {
   async getFollows() {}
 
+  async getFollowCountByUserId(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const { userId } = req.params;
+      const follower = await followService.getFollowers(userId);
+      const following = await followService.getFollowings(userId);
+
+      const followerCount = follower.length;
+      const followingCount = following.length;
+      res.json({
+        status: 200,
+        message: 'Succesfully get follow data',
+        data: {
+          followerCount,
+          followingCount,
+        },
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async getFollowersByUserId(req: Request, res: Response, next: NextFunction) {
     try {
       const { userId } = req.params;
@@ -19,10 +44,12 @@ class FollowController {
         });
         return;
       }
+      const followingCount = followers.length;
       res.json({
         status: 200,
         message: 'Successfully get followers data!',
         data: followers,
+        followingCount,
       });
     } catch (error) {
       next(error);
@@ -40,10 +67,12 @@ class FollowController {
         });
         return;
       }
+      const followerCount = followings.length;
       res.json({
         status: 200,
         message: 'Successfully get followers data!',
         data: followings,
+        followerCount,
       });
     } catch (error) {
       next(error);
