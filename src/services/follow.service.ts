@@ -11,12 +11,26 @@ class FollowService {
   async getFollowers(followedId: string) {
     return await prisma.follow.findMany({
       where: { followedId },
+      include: {
+        following: {
+          include: {
+            profile: true,
+          },
+        },
+      },
     });
   }
 
   async getFollowings(followingId: string) {
     return await prisma.follow.findMany({
       where: { followingId },
+      include: {
+        followed: {
+          include: {
+            profile: true,
+          },
+        },
+      },
     });
   }
 

@@ -6,8 +6,8 @@ const router = express.Router();
 // rekoemdasi akun
 router.get('/', followController.getFollows);
 
-router.get('/followers/:userId', followController.getFollowersByUserId);
-router.get('/folowings/:userId', followController.getFollowingsByUserId);
+router.get('/:userId/followers', followController.getFollowersByUserId);
+router.get('/:userId/followings', followController.getFollowingsByUserId);
 
 router.post('/:userId', followController.createFollowByUserId);
 router.delete('/:userId', followController.deleteFollowByUserId);

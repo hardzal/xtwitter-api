@@ -67,6 +67,11 @@ class ThreadService {
         },
         likes: true,
       },
+      orderBy: [
+        {
+          createdAt: 'desc',
+        },
+      ],
     });
   }
 

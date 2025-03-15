@@ -4,15 +4,15 @@ const router = express.Router();
 
 import { authCheck } from '../middlewares/auth-check.middleware';
 import { rateLimit } from '../middlewares/rate-limit.middleware';
-import likeController from '../controllers/like.controller';
+import likereplyController from '../controllers/likereply.controller';
 
 router.use(rateLimit('likes'));
 
-router.get('/', likeController.getLikes);
-router.get('/:threadId', likeController.getLikesByTheadId);
-router.get('/:userId', likeController.getLikesByUserId);
-router.get('/:id', likeController.getLike);
-router.post('/', authCheck, likeController.createLike);
-router.delete('/:threadId', authCheck, likeController.deleteLike);
+router.get('/', likereplyController.getLikes);
+router.get('/::replyId', likereplyController.getLikesByReplyId);
+router.get('/:userId', likereplyController.getLikesByUserId);
+router.get('/:id', likereplyController.getLike);
+router.post('/', authCheck, likereplyController.createLike);
+router.delete('/:replyId', authCheck, likereplyController.deleteLike);
 
 export default router;

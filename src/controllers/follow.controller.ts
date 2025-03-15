@@ -19,7 +19,11 @@ class FollowController {
         });
         return;
       }
-      res.json(followers);
+      res.json({
+        status: 200,
+        message: 'Successfully get followers data!',
+        data: followers,
+      });
     } catch (error) {
       next(error);
     }
@@ -36,7 +40,11 @@ class FollowController {
         });
         return;
       }
-      res.json(followings);
+      res.json({
+        status: 200,
+        message: 'Successfully get followers data!',
+        data: followings,
+      });
     } catch (error) {
       next(error);
     }

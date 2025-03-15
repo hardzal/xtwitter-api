@@ -47,7 +47,7 @@ class LikeReplyController {
                   content: {
                       "application/json": {
                           schema: {
-                              $ref: "#/components/schemas/CreateLikeDTO"
+                              $ref: "#/components/schemas/CreateLikeReplyDTO"
                           }  
                       }
                   }

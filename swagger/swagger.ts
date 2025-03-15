@@ -130,7 +130,12 @@ const doc = {
           threadId: {
             type: 'string',
           },
-          userId: {
+        },
+      },
+      CreateLikeReplyDTO: {
+        type: 'object',
+        properties: {
+          replyId: {
             type: 'string',
           },
         },
