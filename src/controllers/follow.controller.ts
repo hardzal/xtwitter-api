@@ -45,10 +45,26 @@ class FollowController {
         return;
       }
       const followingCount = followers.length;
+      const newFollowers = [];
+
+      for (const follow of followers) {
+        // apakah user melakukan follow back
+        const followUser = await followService.getFollowsDetails(
+          follow.followingId,
+          userId
+        );
+        const isFollowing = followUser ? true : false;
+
+        newFollowers.push({
+          ...follow,
+          isFollowing,
+        });
+      }
+
       res.json({
         status: 200,
         message: 'Successfully get followers data!',
-        data: followers,
+        data: newFollowers,
         followingCount,
       });
     } catch (error) {
@@ -60,6 +76,7 @@ class FollowController {
     try {
       const { userId } = req.params;
       const followings = await followService.getFollowings(userId);
+
       if (followings.length === 0) {
         res.json({
           status: 204,
@@ -67,11 +84,27 @@ class FollowController {
         });
         return;
       }
+
+      const newFollowings = [];
+
+      for (const follow of followings) {
+        const followUser = await followService.getFollowsDetails(
+          userId,
+          follow.followedId
+        );
+        const isFollowed = followUser ? true : false;
+
+        newFollowings.push({
+          ...follow,
+          isFollowed,
+        });
+      }
+
       const followerCount = followings.length;
       res.json({
         status: 200,
         message: 'Successfully get followers data!',
-        data: followings,
+        data: newFollowings,
         followerCount,
       });
     } catch (error) {

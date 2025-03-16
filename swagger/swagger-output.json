@@ -1063,6 +1063,26 @@
         }
       }
     },
+    "/api/follows/{userId}/count": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/follows/{userId}/followers": {
       "get": {
         "description": "",
@@ -1083,7 +1103,7 @@
         }
       }
     },
-    "/api/follows/{userId}/folowings": {
+    "/api/follows/{userId}/followings": {
       "get": {
         "description": "",
         "parameters": [
