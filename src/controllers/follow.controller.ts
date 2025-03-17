@@ -153,21 +153,11 @@ class FollowController {
   }
 
   async deleteFollowByUserId(req: Request, res: Response, next: NextFunction) {
-    /*  #swagger.requestBody = {
-                  required: true,
-                  content: {
-                      "application/json": {
-                          schema: {
-                              $ref: "#/components/schemas/DeleteFollowDTO"
-                          }  
-                      }
-                  }
-              } 
-          */
     try {
-      const body = req.body;
-      const followingId = req.params.userId;
-      const { followedId } = await deleteFollowSchema.validateAsync(body);
+      const followingId = req.user.userId;
+      const { followedId } = await deleteFollowSchema.validateAsync(
+        req.params.userId
+      );
       const follow = await followService.getFollowsDetails(
         followedId,
         followingId

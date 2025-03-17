@@ -156,14 +156,6 @@ const doc = {
           },
         },
       },
-      DeleteFollowDTO: {
-        type: 'object',
-        properties: {
-          followedId: {
-            type: 'string',
-          },
-        },
-      },
     },
   },
   host: 'localhost:3000',

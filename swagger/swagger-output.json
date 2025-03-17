@@ -132,6 +132,13 @@
         "description": "",
         "parameters": [
           {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "q",
             "in": "query",
             "schema": {
@@ -143,10 +150,18 @@
           "200": {
             "description": "OK"
           },
+          "401": {
+            "description": "Unauthorized"
+          },
           "404": {
             "description": "Not Found"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/api/users/{id}": {
@@ -1168,16 +1183,6 @@
           "200": {
             "description": "OK"
           }
-        },
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/DeleteFollowDTO"
-              }
-            }
-          }
         }
       }
     },
@@ -1469,14 +1474,6 @@
         }
       },
       "CreateFollowDTO": {
-        "type": "object",
-        "properties": {
-          "followedId": {
-            "type": "string"
-          }
-        }
-      },
-      "DeleteFollowDTO": {
         "type": "object",
         "properties": {
           "followedId": {

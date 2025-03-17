@@ -4,6 +4,7 @@ import {
   createUserSchema,
   updateUserSchema,
 } from '../utils/schemas/user.schema';
+import followService from '../services/follow.service';
 
 class UserController {
   async getUsers(req: Request, res: Response, next: NextFunction) {
@@ -41,19 +42,35 @@ class UserController {
         res.json([]);
         return;
       }
+      const userId = req.user.id;
 
       const users = await userService.getUserSearch(q);
+
+      const newSearch = [];
+      for (const user of users) {
+        const follow = await followService.getFollowsDetails(user.id, userId);
+
+        const isFollowing = follow ? true : false;
+
+        newSearch.push({
+          ...user,
+          isFollowing,
+        });
+      }
+
       if (users.length > 0) {
         res.status(200).json({
           message: 'get all data search users!',
-          data: users,
+          data: newSearch,
         });
       } else {
         res.status(404).json({
           message: 'Not found',
         });
       }
+      // console.log(newSearch);
     } catch (error) {
+      console.log(error);
       next(error);
     }
   }
