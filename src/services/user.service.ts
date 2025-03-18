@@ -35,6 +35,19 @@ class UserService {
     });
   }
 
+  async getUserByUsername(username: string) {
+    return await prisma.user.findFirst({
+      where: { username },
+      select: {
+        id: true,
+        username: true,
+        email: true,
+        profile: true,
+        threads: true,
+      },
+    });
+  }
+
   async getUserSearch(search?: string) {
     if (search) {
       return await prisma.user.findMany({

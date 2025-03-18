@@ -34,6 +34,21 @@ class UserController {
     return;
   }
 
+  async getUserByUsername(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { username } = req.params;
+      const user = await userService.getUserByUsername(username);
+
+      res.json({
+        message: 'succesfully get user data',
+        data: user,
+      });
+    } catch (error) {
+      next(error);
+    }
+    return;
+  }
+
   async getUserSearch(req: Request, res: Response, next: NextFunction) {
     try {
       const q = req.query.q as string;
@@ -48,6 +63,7 @@ class UserController {
 
       const newSearch = [];
       for (const user of users) {
+        // mencari tahu apakah user login memnfollow user ini
         const follow = await followService.getFollowsDetails(user.id, userId);
 
         const isFollowing = follow ? true : false;

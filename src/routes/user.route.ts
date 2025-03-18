@@ -6,6 +6,7 @@ const router = express.Router();
 
 router.get('/', authCheck, userController.getUsers);
 router.get('/search', authCheck, userController.getUserSearch);
+router.get('/:username', userController.getUserByUsername);
 router.get('/:id', authCheck, userController.getUserById);
 router.post('/', authCheck, userController.createUser);
 router.patch('/:id', authCheck, userController.updateUserById);
