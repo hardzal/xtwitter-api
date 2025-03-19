@@ -4,7 +4,6 @@ import {
   createFollowSchema,
   deleteFollowSchema,
 } from '../utils/schemas/follows.schema';
-
 class FollowController {
   async getFollows() {}
 
@@ -128,6 +127,7 @@ class FollowController {
       const body = req.body;
       const followingId = req.user.id;
       const { followedId } = await createFollowSchema.validateAsync(body);
+
       if (followedId === followingId) {
         res.json({
           status: 403,
@@ -135,6 +135,19 @@ class FollowController {
         });
         return;
       }
+      const followInfo = await followService.getFollowings(followedId);
+
+      if (followInfo === null) {
+        console.log(followInfo);
+        res.json({
+          status: 403,
+          message: "Can't follow again",
+        });
+        return;
+      }
+      console.log(followedId);
+      console.log(followingId);
+
       const follow = await followService.createFollow(followedId, followingId);
 
       if (!follow) {
