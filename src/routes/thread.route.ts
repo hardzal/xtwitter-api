@@ -22,7 +22,7 @@ router.put(
   threadController.updateThread
 );
 router.delete(
-  '/',
+  '/:id',
   authCheck,
   uploadImage.single('images'),
   threadController.deleteThread

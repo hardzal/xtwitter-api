@@ -5,7 +5,15 @@ import {
   deleteFollowSchema,
 } from '../utils/schemas/follows.schema';
 class FollowController {
-  async getFollows() {}
+  // suggestion follows
+  async getFollows(req: Request, res: Response, next: NextFunction) {
+    try {
+      res.json();
+    } catch (error) {
+      next(error);
+    }
+    return;
+  }
 
   async getFollowCountByUserId(
     req: Request,

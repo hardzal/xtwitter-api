@@ -44,7 +44,7 @@ model Profile {
   bannerURL String?
   bio       String?
 
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId String @unique
 
   createdAt DateTime @default(now())
@@ -59,7 +59,7 @@ model Thread {
   content String
   images  String?
 
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId String
 
   likes   Like[]
@@ -74,10 +74,10 @@ model Thread {
 model Follow {
   id String @id @default(uuid())
 
-  followed   User   @relation(name: "followedUser", fields: [followedId], references: [id])
+  followed   User   @relation(name: "followedUser", fields: [followedId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   followedId String // yang difollow
 
-  following   User   @relation(name: "followingUser", fields: [followingId], references: [id])
+  following   User   @relation(name: "followingUser", fields: [followingId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   followingId String // yang memfollow
 
   createdAt DateTime @default(now())
@@ -89,10 +89,10 @@ model Follow {
 model Like {
   id String @id @default(uuid())
 
-  thread   Thread @relation(fields: [threadId], references: [id])
+  thread   Thread @relation(fields: [threadId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   threadId String
 
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId String
 
   createdAt DateTime @default(now())
@@ -104,13 +104,13 @@ model Like {
 model Reply {
   id String @id @default(uuid())
 
-  thread   Thread @relation(fields: [threadId], references: [id])
-  threadId String
+  thread   Thread? @relation(fields: [threadId], references: [id], onDelete: SetNull, onUpdate: SetNull)
+  threadId String?
 
   content String
   images  String?
 
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId String
 
   likeReply LikeReply[]
@@ -124,10 +124,10 @@ model Reply {
 model LikeReply {
   id String @id @default(uuid())
 
-  reply   Reply  @relation(fields: [replyId], references: [id])
+  reply   Reply  @relation(fields: [replyId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   replyId String
 
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId String
 
   createdAt DateTime @default(now())

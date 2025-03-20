@@ -3,6 +3,7 @@ import { v2 as cloudinary } from 'cloudinary';
 import threadService from '../services/thread.service';
 import {
   createThreadSchema,
+  deleteThreadSchema,
   updateThreadSchema,
 } from '../utils/schemas/thread.schema';
 import likesService from '../services/like.service';
@@ -189,9 +190,11 @@ class ThreadController {
       let body: object = {};
       let imageUrl: string = '';
       const id = req.params.id;
-      const data = await threadService.getThreadById(req.body.id);
-
+      console.log(body);
+      const data = await threadService.getThreadById(id);
       const oldImages: string = data?.images as string;
+
+      console.log('oldImages', oldImages);
 
       if (req.file) {
         imageUrl = await uploadImageSingle('dumbways/threads', req);
@@ -233,7 +236,8 @@ class ThreadController {
   // delete thread
   async deleteThread(req: Request, res: Response, next: NextFunction) {
     try {
-      const data = await threadService.getThreadById(req.body.id);
+      const { id } = await deleteThreadSchema.validateAsync(req.params);
+      const data = await threadService.getThreadById(id);
 
       if (data?.images) {
         const images = data?.images
@@ -246,10 +250,10 @@ class ThreadController {
         });
       }
 
-      const thread = await threadService.deleteThread(req.body.id);
+      const thread = await threadService.deleteThread(id);
       res
-        .status(204)
-        .json({ message: 'Succesfully deleted the image!', ...thread });
+        .status(202)
+        .json({ message: 'Succesfully deleted the thread!', data: thread });
     } catch (error) {
       next(error);
     }
