@@ -5,7 +5,7 @@ import { authCheck } from '../middlewares/auth-check.middleware';
 const router = express.Router();
 
 // rekoemdasi akun
-router.get('/', authCheck, followController.getFollows);
+router.get('/suggest', authCheck, followController.getFollows);
 router.get('/:userId/count', followController.getFollowCountByUserId);
 router.get('/:userId/followers', followController.getFollowersByUserId);
 router.get('/:userId/followings', followController.getFollowingsByUserId);

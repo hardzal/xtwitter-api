@@ -1082,7 +1082,7 @@
         ]
       }
     },
-    "/api/follows/": {
+    "/api/follows/suggest": {
       "get": {
         "description": "",
         "parameters": [

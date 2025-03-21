@@ -10,6 +10,7 @@ class FollowController {
   async getFollows(req: Request, res: Response, next: NextFunction) {
     try {
       const userId = req?.user.id;
+      const userDetail = await userService.getUserById(userId);
 
       const users = await userService.getUsers();
       const userFollowing = await followService.getFollowings(userId);
@@ -19,25 +20,38 @@ class FollowController {
       const followedIds = userFollowed.map((user) => user.followingId);
 
       const newFollow = users
-        .filter((user) => !followingIds.includes(user.id))
-        .map((user) => user.id);
+        .filter((user) => !followingIds.includes(user.id) && user.id !== userId)
+        .map((user) => user);
 
+      // user yang belum difollback
       const notFollow = users
-        .filter((user) => !followedIds.includes(user.id))
-        .map((user) => user.id);
+        .filter(
+          (user) =>
+            !followedIds.includes(user.id) &&
+            !followingIds.includes(user.id) &&
+            user.id !== userId
+        )
+        .map((user) => user);
+      console.log(notFollow);
 
       // sort by user already followed
       const newUser = newFollow.filter((user) => !notFollow.includes(user));
 
+      newUser.map((user) => notFollow.push(user));
+
       // total user followed
       // total user liked
       // user already comment in our thread
+      const newSuggest = notFollow.map((user) => ({
+        user: userDetail,
+        isFollowing: followedIds.includes(user.id),
+        isFollowed: followingIds.includes(user.id),
+        following: user,
+      }));
 
-      newUser.map((user) => notFollow.push(user));
       res.json({
-        data: {
-          notFollow,
-        },
+        message: 'Succesfully get data',
+        data: newSuggest.reverse(),
       });
     } catch (error) {
       next(error);
