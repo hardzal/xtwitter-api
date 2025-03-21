@@ -12,5 +12,5 @@ export type CreateProfileDTO = Pick<
 
 export type UpdateProfileDTO = Pick<
   ProfileUser,
-  'fullName' | 'avatar' | 'bannerURL' | 'bio'
+  'fullName' | 'username' | 'avatar' | 'bannerURL' | 'bio'
 >;

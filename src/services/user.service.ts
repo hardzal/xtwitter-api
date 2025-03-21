@@ -1,4 +1,8 @@
-import { CreateUserDTO, UpdateUserDTO } from '../dtos/user.dto';
+import {
+  CreateUserDTO,
+  UpdateProfileDTO,
+  UpdateUserDTO,
+} from '../dtos/user.dto';
 import { prisma } from '../libs/prisma';
 
 class UserService {
@@ -92,6 +96,13 @@ class UserService {
   }
 
   async updateUserById(id: string, data: UpdateUserDTO) {
+    return await prisma.user.update({
+      where: { id },
+      data,
+    });
+  }
+
+  async updateProfileById(id: string, data: UpdateProfileDTO) {
     return await prisma.user.update({
       where: { id },
       data,

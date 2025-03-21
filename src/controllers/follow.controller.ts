@@ -4,11 +4,41 @@ import {
   createFollowSchema,
   deleteFollowSchema,
 } from '../utils/schemas/follows.schema';
+import userService from '../services/user.service';
 class FollowController {
   // suggestion follows
   async getFollows(req: Request, res: Response, next: NextFunction) {
     try {
-      res.json();
+      const userId = req?.user.id;
+
+      const users = await userService.getUsers();
+      const userFollowing = await followService.getFollowings(userId);
+      const userFollowed = await followService.getFollowers(userId);
+
+      const followingIds = userFollowing.map((user) => user.followedId);
+      const followedIds = userFollowed.map((user) => user.followingId);
+
+      const newFollow = users
+        .filter((user) => !followingIds.includes(user.id))
+        .map((user) => user.id);
+
+      const notFollow = users
+        .filter((user) => !followedIds.includes(user.id))
+        .map((user) => user.id);
+
+      // sort by user already followed
+      const newUser = newFollow.filter((user) => !notFollow.includes(user));
+
+      // total user followed
+      // total user liked
+      // user already comment in our thread
+
+      newUser.map((user) => notFollow.push(user));
+      res.json({
+        data: {
+          notFollow,
+        },
+      });
     } catch (error) {
       next(error);
     }

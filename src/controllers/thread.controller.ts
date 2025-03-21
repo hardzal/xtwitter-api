@@ -194,8 +194,6 @@ class ThreadController {
       const data = await threadService.getThreadById(id);
       const oldImages: string = data?.images as string;
 
-      console.log('oldImages', oldImages);
-
       if (req.file) {
         imageUrl = await uploadImageSingle('dumbways/threads', req);
 

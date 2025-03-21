@@ -2,6 +2,9 @@ import { Profile, User } from '../../node_modules/.prisma/client/index';
 
 type UserProfile = User & {
   fullName: Profile['fullName'];
+  bio: Profile['bio'];
+  avatar: Profile['avatar'];
+  bannerURL: Profile['bannerURL'];
 };
 
 export type CreateUserDTO = Pick<
@@ -10,3 +13,8 @@ export type CreateUserDTO = Pick<
 >;
 
 export type UpdateUserDTO = Pick<UserProfile, 'email' | 'username'>;
+
+export type UpdateProfileDTO = Pick<
+  UserProfile,
+  'fullName' | 'bio' | 'avatar' | 'bannerURL'
+>;
