@@ -85,9 +85,7 @@ class LikeController {
 
   async deleteLike(req: Request, res: Response, next: NextFunction) {
     try {
-      const { threadId } = await deleteLikeSchema.validateAsync(
-        req.params.threadId
-      );
+      const { threadId } = await deleteLikeSchema.validateAsync(req.params);
       const userId = req.user.id;
       const like = await likeService.getLike(userId, threadId);
       if (!like) {

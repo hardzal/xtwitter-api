@@ -14,8 +14,7 @@ class ThreadController {
   async getThreads(req: Request, res: Response, next: NextFunction) {
     try {
       // login UserId
-      const userId = req?.user?.id;
-
+      const { userId } = req.params;
       const page = parseInt(req.query.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 10;
       const startIndex = (page - 1) * limit;
@@ -31,7 +30,7 @@ class ThreadController {
       const newThreads = await Promise.all(
         threads.map(async (thread) => {
           const like = await likesService.getLike(userId, thread.id);
-          const isLiked = like ? true : false;
+          const isLiked = like !== null ? true : false;
           const likesCount = thread.likes.length;
           const repliesCount = thread.replies.length;
 
@@ -82,8 +81,6 @@ class ThreadController {
         isLiked,
       });
     } catch (error) {
-      console.log('error here');
-      console.log(error);
       next(error);
     }
     return;
@@ -101,6 +98,7 @@ class ThreadController {
         });
         return;
       }
+
       const newThreads = await Promise.all(
         threads.map(async (thread) => {
           const like = await likesService.getLike(userId, thread.id);
@@ -119,8 +117,6 @@ class ThreadController {
 
       res.json(newThreads);
     } catch (error) {
-      console.log('error here');
-      console.log(error);
       next(error);
     }
     return;
@@ -153,7 +149,6 @@ class ThreadController {
       const validatedBody = await createThreadSchema.validateAsync(body);
       const thread = await threadService.createThread(userId, validatedBody);
 
-      console.log(thread);
       if (thread) {
         res.status(201).json({
           message: 'Thread created!',
@@ -165,8 +160,6 @@ class ThreadController {
         });
       }
     } catch (error) {
-      console.log('error coy');
-      console.log(error);
       next(error);
     }
     return;
@@ -190,7 +183,6 @@ class ThreadController {
       let body: object = {};
       let imageUrl: string = '';
       const id = req.params.id;
-      console.log(body);
       const data = await threadService.getThreadById(id);
       const oldImages: string = data?.images as string;
 

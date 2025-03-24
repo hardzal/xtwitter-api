@@ -32,7 +32,6 @@ class FollowController {
             user.id !== userId
         )
         .map((user) => user);
-      console.log(notFollow);
 
       // sort by user already followed
       const newUser = newFollow.filter((user) => !notFollow.includes(user));
@@ -190,15 +189,12 @@ class FollowController {
       const followInfo = await followService.getFollowings(followedId);
 
       if (followInfo === null) {
-        console.log(followInfo);
         res.json({
           status: 403,
           message: "Can't follow again",
         });
         return;
       }
-      console.log(followedId);
-      console.log(followingId);
 
       const follow = await followService.createFollow(followedId, followingId);
 
