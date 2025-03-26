@@ -63,13 +63,10 @@ class ThreadController {
         });
         return;
       }
-      let isLiked = false;
 
-      if (req.user) {
-        const userId = req.user.id;
-        const like = await likesService.getLike(userId, thread.id);
-        isLiked = like ? true : false;
-      }
+      const userId = req.user?.id;
+      const like = await likesService.getLike(userId, thread.id);
+      const isLiked = like ? true : false;
 
       const likesCount = thread?.likes.length;
       const repliesCount = thread?.replies.length;

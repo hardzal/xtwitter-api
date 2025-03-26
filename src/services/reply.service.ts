@@ -12,6 +12,7 @@ class ReplyService {
       include: {
         user: true,
         thread: true,
+        likeReply: true,
       },
     });
   }
@@ -26,6 +27,7 @@ class ReplyService {
           },
         },
         thread: true,
+        likeReply: true,
       },
     });
   }
@@ -36,6 +38,7 @@ class ReplyService {
       include: {
         user: true,
         thread: true,
+        likeReply: true,
       },
     });
   }

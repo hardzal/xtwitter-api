@@ -12,7 +12,10 @@ class LikeReplyController {
     try {
       const { replyId } = req.params;
       const likes = await likereplyService.getLikesByReplyId(replyId);
-      res.json(likes);
+      res.json({
+        message: 'Success get like reply data',
+        data: likes,
+      });
     } catch (error) {
       next(error);
     }
@@ -23,7 +26,10 @@ class LikeReplyController {
     try {
       const { userId } = req.params;
       const likes = await likereplyService.getLikesByUserId(userId);
-      res.json(likes);
+      res.json({
+        message: 'Success get like by user id',
+        data: likes,
+      });
     } catch (error) {
       next(error);
     }
@@ -34,7 +40,7 @@ class LikeReplyController {
     try {
       const { id } = req.params;
       const like = await likereplyService.getLikeById(id);
-      res.json(like);
+      res.json({ message: 'Success get like', data: like });
     } catch (error) {
       next(error);
     }

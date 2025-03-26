@@ -1,13 +1,14 @@
 import { NextFunction, Request, Response } from 'express';
-import { prisma } from '../libs/prisma';
+
 import replyService from '../services/reply.service';
 import { createReplySchema } from '../utils/schemas/reply.schmea';
+import likereplyService from '../services/likereply.service';
 
 class ReplyController {
   async getReplies(req: Request, res: Response, next: NextFunction) {
     try {
-      const replies = await prisma.reply.findMany();
-      res.json(replies);
+      // res.json(replies);
+      res.json();
     } catch (error) {
       next(error);
     }
@@ -18,14 +19,30 @@ class ReplyController {
   async getReplyById(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
-      const reply = await prisma.reply.findFirst({
-        where: { id },
-        include: {
-          thread: true,
-          user: true,
-        },
+      const reply = await replyService.getReplyById(id);
+
+      if (!reply) {
+        res.status(404).json({
+          message: 'Thread is not found!',
+        });
+        return;
+      }
+
+      let isLiked = false;
+
+      if (req.user) {
+        const userId = req.user.id;
+        const likereply = await likereplyService.getLike(userId, reply?.id);
+        isLiked = likereply ? true : false;
+      }
+
+      const likesCount = reply?.likeReply.length;
+
+      res.json({
+        ...reply,
+        likesCount,
+        isLiked,
       });
-      res.json(reply);
     } catch (error) {
       next(error);
     }
@@ -34,10 +51,32 @@ class ReplyController {
 
   async getRepliesByThreadId(req: Request, res: Response, next: NextFunction) {
     try {
+      const userId = req.user.id;
       const threadId = req.params.threadId;
       const replies = await replyService.getRepliesByThreadId(threadId);
+      console.log('user', userId);
+      if (!replies) {
+        res.status(404).json({
+          message: 'Thread reply not found',
+        });
+        return;
+      }
+      const newReplies = await Promise.all(
+        replies.map(async (reply) => {
+          const likeReply = await likereplyService.getLike(userId, reply.id);
+          const isLiked = likeReply ? true : false;
+          console.log('like kok', isLiked);
+          const likesCount = reply.likeReply.length;
 
-      res.json(replies);
+          return {
+            ...reply,
+            likesCount,
+            isLiked,
+          };
+        })
+      );
+
+      res.json(newReplies);
     } catch (error) {
       next(error);
     }

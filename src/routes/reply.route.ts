@@ -6,9 +6,9 @@ import { rateLimit } from '../middlewares/rate-limit.middleware';
 const router = express.Router();
 router.use(rateLimit('reply'));
 
-router.get('/:threadId', replyController.getReplies);
+router.get('/:threadId', authCheck, replyController.getRepliesByThreadId);
 router.post('/:threadId', authCheck, replyController.createReply);
-router.get('/:id', replyController.getReplyById);
+router.get('/:id', authCheck, replyController.getReplyById);
 router.put('/:id', authCheck, replyController.updateReplyById);
 router.delete('/:id', authCheck, replyController.deleteReplyById);
 
