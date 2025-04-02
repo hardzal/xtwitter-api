@@ -65,7 +65,6 @@ class ReplyController {
         replies.map(async (reply) => {
           const likeReply = await likereplyService.getLike(userId, reply.id);
           const isLiked = likeReply ? true : false;
-          console.log('like kok', isLiked);
           const likesCount = reply.likeReply.length;
 
           return {

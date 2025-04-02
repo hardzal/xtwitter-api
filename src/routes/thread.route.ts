@@ -9,6 +9,7 @@ router.use(rateLimit('thread'));
 router.get('/:userId/all', threadController.getThreads);
 router.get('/:userId/user', threadController.getThreadByUserId);
 router.get('/:id', authCheck, threadController.getThreadById);
+router.get('/:userId/images', threadController.getAllImagesByUserId);
 router.post(
   '/',
   authCheck,

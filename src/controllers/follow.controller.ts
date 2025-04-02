@@ -83,6 +83,34 @@ class FollowController {
     }
   }
 
+  async getFollowUserProfile(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { userId } = req.params;
+      const loginId = req?.user?.id;
+
+      if (userId === loginId) {
+        res.json({
+          message: 'Error, Same id.',
+          status: 400,
+        });
+        return;
+      }
+
+      const follow = await followService.getFollowsDetails(userId, loginId);
+      const isFollowing = follow ? true : false;
+
+      res.json({
+        message: 'Followed user!',
+        data: {
+          ...follow,
+          isFollowing,
+        },
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async getFollowersByUserId(req: Request, res: Response, next: NextFunction) {
     try {
       const { userId } = req.params;

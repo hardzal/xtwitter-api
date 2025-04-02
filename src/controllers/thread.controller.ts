@@ -245,6 +245,38 @@ class ThreadController {
       next(error);
     }
   }
+
+  async getAllImagesByUserId(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { userId } = req.params;
+
+      const images = await threadService.getAllImagesByUserId(userId);
+
+      const newThreads = await Promise.all(
+        images.map(async (thread) => {
+          const like = await likesService.getLike(userId, thread.id);
+          const isLiked = like ? true : false;
+          const likesCount = thread.likes.length;
+          const repliesCount = thread.replies.length;
+
+          return {
+            ...thread,
+            likesCount,
+            repliesCount,
+            isLiked,
+          };
+        })
+      );
+
+      res.json({
+        message: 'success get all images',
+        data: newThreads,
+      });
+    } catch (error) {
+      next(error);
+    }
+    return;
+  }
 }
 
 export default new ThreadController();

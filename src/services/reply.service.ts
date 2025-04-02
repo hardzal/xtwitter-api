@@ -25,6 +25,9 @@ class ReplyService {
           omit: {
             password: true,
           },
+          include: {
+            profile: true,
+          },
         },
         thread: true,
         likeReply: true,

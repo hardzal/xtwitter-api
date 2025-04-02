@@ -75,9 +75,6 @@ class ThreadService {
     });
   }
 
-  // username
-  async getThreadbyUsername() {}
-
   async createThread(userId: string, thread: CreateThreadDTO) {
     const { content, images } = thread;
     return await prisma.thread.create({
@@ -104,6 +101,21 @@ class ThreadService {
   async deleteThread(id: string) {
     return await prisma.thread.delete({
       where: { id },
+    });
+  }
+
+  async getAllImagesByUserId(userId: string) {
+    return await prisma.thread.findMany({
+      where: { userId },
+      include: {
+        user: {
+          include: {
+            profile: true,
+          },
+        },
+        likes: true,
+        replies: true,
+      },
     });
   }
 }
