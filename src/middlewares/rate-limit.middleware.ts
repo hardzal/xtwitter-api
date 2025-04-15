@@ -6,7 +6,7 @@ export function rateLimit(identifier: string) {
   return async (req: Request, res: Response, next: NextFunction) => {
     const ratelimit = new Ratelimit({
       redis: Redis.fromEnv(),
-      limiter: Ratelimit.slidingWindow(10, '10 s'),
+      limiter: Ratelimit.slidingWindow(10, '60 s'),
     });
 
     const identfier = identifier;

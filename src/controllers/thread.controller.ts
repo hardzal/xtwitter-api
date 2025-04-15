@@ -143,6 +143,7 @@ class ThreadController {
       };
 
       const userId = req.user.id;
+      console.log('body', body);
       const validatedBody = await createThreadSchema.validateAsync(body);
       const thread = await threadService.createThread(userId, validatedBody);
 

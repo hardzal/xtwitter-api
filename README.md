@@ -2,17 +2,20 @@
 
 #### A dummy project API with Express + typescript
 
-`npx tsc --init`
+- Initial typescript project
+  `npx tsc --init`
 
-run
-`npx tsx --env-file=.env --watch src/index.ts`
-or
-`npx tsc --noEmit && node --no-warnings=ExperimentalWarning --loader ts-node/esm src/index.ts`
+- run to watch dev
+  `npx tsx --env-file=.env --watch src/index.ts`
+  or
+  `npx tsc --noEmit && node --no-warnings=ExperimentalWarning --loader ts-node/esm src/index.ts`
 
-check error
-`npx tsc --noEmit`
+- Validation and check error Typescript
+  `npx tsc --noEmit`
 
-`npm install prisma`
-`npx prisma init`
+- Run this to install prisma
+  `npm install prisma`
+  `npx prisma init`
 
-`npm run swagger`
+- Run this to generate docs API Swagger
+  `npm run swagger`
